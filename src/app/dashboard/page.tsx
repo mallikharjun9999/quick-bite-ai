@@ -1,65 +1,26 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { getFirestore, doc, onSnapshot, setDoc } from "firebase/firestore";
-import { app } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, X, Loader2, Soup, Sparkles } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Loader2, Soup, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { type SuggestRecipesOutput, type SuggestRecipesInput } from "@/ai/flows/suggest-recipes";
 import { getRecipeSuggestions } from "@/app/actions";
 import { RecipeCard, RecipeCardSkeleton } from "@/components/recipe-card";
-
-const db = getFirestore(app);
+import { RecipeForm, type RecipeFormValues } from "@/components/recipe-form";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   
-  const [ingredients, setIngredients] = useState<string[]>([]);
-  const [newIngredient, setNewIngredient] = useState("");
   const [recipes, setRecipes] = useState<SuggestRecipesOutput | null>(null);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
-    const userDocRef = doc(db, "users", user.uid);
-    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setIngredients(data.ingredients || []);
-        setRecipes(data.recipes || null);
-      }
-      setIsSyncing(false);
-    });
-    return () => unsubscribe();
-  }, [user]);
-
-  useEffect(() => {
-    if (!user || isSyncing) return;
-    const userDocRef = doc(db, "users", user.uid);
-    // Debounce this call if it becomes too frequent
-    setDoc(userDocRef, { ingredients, recipes }, { merge: true });
-  }, [ingredients, recipes, user, isSyncing]);
-
-  const handleAddIngredient = () => {
-    if (newIngredient.trim() && !ingredients.includes(newIngredient.trim())) {
-      setIngredients([...ingredients, newIngredient.trim()]);
-      setNewIngredient("");
-    }
-  };
-
-  const handleRemoveIngredient = (ingredientToRemove: string) => {
-    setIngredients(ingredients.filter((ing) => ing !== ingredientToRemove));
-  };
-
-  const handleGenerateRecipes = async () => {
-    if (ingredients.length === 0) {
+  const handleGenerateRecipes = async (values: RecipeFormValues) => {
+    if (values.availableIngredients.length === 0) {
       toast({
         variant: "destructive",
         title: "No Ingredients",
@@ -71,12 +32,12 @@ export default function DashboardPage() {
     setRecipes(null);
     try {
       const input: SuggestRecipesInput = {
-        availableIngredients: ingredients.join(", "),
-        mealType: "Any",
-        dietaryPreference: "None",
-        allergies: "None",
-        cookingTimePreference: "Any",
-        goal: "A delicious meal"
+        availableIngredients: values.availableIngredients.join(", "),
+        mealType: values.mealType,
+        dietaryPreference: values.dietaryPreference,
+        allergies: values.allergies || "None",
+        cookingTimePreference: values.cookingTimePreference,
+        goal: "A delicious meal that meets my requirements."
       };
       const result = await getRecipeSuggestions(input);
       setRecipes(result);
@@ -96,42 +57,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <aside className="lg:col-span-1">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <aside className="lg:col-span-1 lg:sticky top-20">
         <Card>
           <CardHeader>
-            <CardTitle>Your Ingredients</CardTitle>
+            <CardTitle>Find a Recipe</CardTitle>
+            <CardDescription>Fill out your preferences and see what you can make!</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-2 mb-4">
-              <Input
-                placeholder="e.g., Chicken, Tomato"
-                value={newIngredient}
-                onChange={(e) => setNewIngredient(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAddIngredient()}
-              />
-              <Button onClick={handleAddIngredient}><Plus className="h-4 w-4" /></Button>
-            </div>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {ingredients.map((ing) => (
-                <div key={ing} className="flex items-center gap-1 bg-secondary pl-3 pr-1 py-1 rounded-full text-sm">
-                  {ing}
-                  <button onClick={() => handleRemoveIngredient(ing)} className="bg-muted hover:bg-muted/80 rounded-full p-0.5">
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-             {ingredients.length > 0 && (
-                <Button onClick={handleGenerateRecipes} className="w-full" disabled={isLoadingRecipes}>
-                  {isLoadingRecipes ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Sparkles className="mr-2 h-4 w-4" />
-                  )}
-                  Generate Recipes
-                </Button>
-              )}
+            <RecipeForm 
+              onSubmit={handleGenerateRecipes}
+              isLoading={isLoadingRecipes}
+            />
           </CardContent>
         </Card>
       </aside>
@@ -139,7 +76,10 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {isLoadingRecipes && (
               <>
-                <h2 className="text-2xl font-bold font-headline animate-pulse">Finding delicious recipes...</h2>
+                <div className="flex items-center gap-2">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary"/>
+                    <h2 className="text-2xl font-bold font-headline animate-pulse">Finding delicious recipes...</h2>
+                </div>
                 <RecipeCardSkeleton />
                 <RecipeCardSkeleton />
               </>
@@ -158,7 +98,7 @@ export default function DashboardPage() {
              <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg min-h-[400px] h-full bg-card">
                 <Soup className="h-16 w-16 text-muted-foreground mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Ready to cook?</h3>
-                <p className="text-muted-foreground max-w-sm">Add your ingredients and click &quot;Generate Recipes&quot; to see what you can make!</p>
+                <p className="text-muted-foreground max-w-sm">Fill out the form to see what you can make!</p>
             </div>
           )}
         </div>

@@ -53,8 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: name,
       email: email,
       signupDate: serverTimestamp(),
-      ingredients: [],
-      recipes: null,
     });
     
     return userCredential;
