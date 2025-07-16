@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, Soup } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -20,31 +19,36 @@ export default function DashboardPage() {
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
 
   const handleGenerateRecipes = async (values: RecipeFormValues) => {
-    if (values.availableIngredients.length === 0 && values.availableIngredients.join(", ").toLowerCase() !== 'none') {
-      toast({
+    if (values.availableIngredients.length === 0) {
+       toast({
         variant: "destructive",
         title: "No Ingredients",
         description: "Please add some ingredients or type 'none'.",
       });
       return;
     }
+    
     setIsLoadingRecipes(true);
     setRecipes(null);
+
     try {
       const input: SuggestRecipesInput = {
-        availableIngredients: values.availableIngredients.join(", "),
+        availableIngredients: values.availableIngredients.join(", ") || "None",
         mealType: values.mealType,
         dietaryPreference: values.dietaryPreference,
         allergies: values.allergies || "None",
         cookingTimePreference: values.cookingTimePreference,
-        goal: "A delicious meal that meets my requirements."
+        goal: "A delicious meal that fits my preferences."
       };
+      
       const result = await getRecipeSuggestions(input);
       setRecipes(result);
+      
       toast({
         title: "Recipes Generated!",
         description: "Your delicious suggestions are ready.",
       });
+
     } catch (error) {
        toast({
         variant: "destructive",

@@ -17,7 +17,7 @@ const recipeFormSchema = z.object({
   mealType: z.string().min(1, "Please select a meal type."),
   dietaryPreference: z.string().min(1, "Please select a dietary preference."),
   allergies: z.string().optional(),
-  availableIngredients: z.array(z.string()).min(1, "Please add at least one ingredient or type 'none'.").or(z.literal("none")),
+  availableIngredients: z.array(z.string()).nonempty("Please add at least one ingredient or type 'none'."),
   cookingTimePreference: z.string().min(1, "Please select a cooking time."),
 });
 
@@ -46,21 +46,24 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
 
   const handleAddIngredient = () => {
     const trimmedIngredient = newIngredient.trim();
-    if (trimmedIngredient.toLowerCase() === 'none') {
-        form.setValue("availableIngredients", ['none']);
+    if (trimmedIngredient) {
+      if (trimmedIngredient.toLowerCase() === 'none') {
+        form.setValue("availableIngredients", ['none'], { shouldValidate: true });
         setNewIngredient("");
         return;
-    }
-    if (trimmedIngredient && Array.isArray(ingredients) && !ingredients.includes(trimmedIngredient)) {
-        const currentIngredients = ingredients.filter(i => i.toLowerCase() !== 'none');
-        form.setValue("availableIngredients", [...currentIngredients, trimmedIngredient]);
+      }
+      
+      const currentIngredients = Array.isArray(ingredients) ? ingredients.filter(i => i.toLowerCase() !== 'none') : [];
+      if (!currentIngredients.map(i => i.toLowerCase()).includes(trimmedIngredient.toLowerCase())) {
+        form.setValue("availableIngredients", [...currentIngredients, trimmedIngredient], { shouldValidate: true });
         setNewIngredient("");
+      }
     }
   };
 
   const handleRemoveIngredient = (ingredientToRemove: string) => {
     if (Array.isArray(ingredients)) {
-        form.setValue("availableIngredients", ingredients.filter((ing) => ing !== ingredientToRemove));
+        form.setValue("availableIngredients", ingredients.filter((ing) => ing !== ingredientToRemove), { shouldValidate: true });
     }
   };
 
@@ -85,6 +88,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
                   <SelectItem value="Dinner">Dinner</SelectItem>
                   <SelectItem value="Snacks">Snacks</SelectItem>
                   <SelectItem value="Brunch">Brunch</SelectItem>
+                   <SelectItem value="Any">Any</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -113,7 +117,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
                   <SelectItem value="High-protein">High-protein</SelectItem>
                   <SelectItem value="Jain">Jain</SelectItem>
                   <SelectItem value="Gluten-Free">Gluten-Free</SelectItem>
-                   <SelectItem value="None">None</SelectItem>
+                  <SelectItem value="None">None</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -128,7 +132,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
             <FormItem>
               <FormLabel>Allergies / Dislikes</FormLabel>
               <FormControl>
-                <Textarea placeholder='e.g., Peanuts, Shellfish, or "none"' {...field} />
+                <Textarea placeholder='e.g., Peanuts, Shellfish, or "None"' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -138,12 +142,12 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
         <FormField
           control={form.control}
           name="availableIngredients"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Available Ingredients at Home</FormLabel>
               <div className="flex gap-2">
                 <Input
-                    placeholder='e.g., Chicken, Tomato, or "none"'
+                    placeholder='e.g., Chicken, Tomato, or "None"'
                     value={newIngredient}
                     onChange={(e) => setNewIngredient(e.target.value)}
                     onKeyDown={(e) => {
@@ -155,7 +159,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
                 />
                 <Button type="button" onClick={handleAddIngredient}><Plus className="h-4 w-4" /></Button>
               </div>
-              <div className="flex flex-wrap gap-2 pt-2">
+              <div className="flex flex-wrap gap-2 pt-2 min-h-[2.5rem]">
                 {Array.isArray(ingredients) && ingredients.map((ing) => (
                   <div key={ing} className="flex items-center gap-1 bg-secondary pl-3 pr-1 py-1 rounded-full text-sm">
                     {ing}
