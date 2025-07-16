@@ -10,6 +10,10 @@ import { type SuggestRecipesOutput, type SuggestRecipesInput } from "@/ai/flows/
 import { getRecipeSuggestions } from "@/app/actions";
 import { RecipeCard, RecipeCardSkeleton } from "@/components/recipe-card";
 import { RecipeForm, type RecipeFormValues } from "@/components/recipe-form";
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { app } from "@/lib/firebase";
+
+const db = getFirestore(app);
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -19,6 +23,15 @@ export default function DashboardPage() {
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
 
   const handleGenerateRecipes = async (values: RecipeFormValues) => {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Not Logged In",
+        description: "You must be logged in to generate recipes.",
+      });
+      return;
+    }
+
     if (values.availableIngredients.length === 0) {
        toast({
         variant: "destructive",
@@ -43,6 +56,14 @@ export default function DashboardPage() {
       
       const result = await getRecipeSuggestions(input);
       setRecipes(result);
+
+      // Save the search and results to Firestore
+      await addDoc(collection(db, "recipe_searches"), {
+        userId: user.uid,
+        userInput: input,
+        generatedRecipes: result.recipes,
+        createdAt: serverTimestamp(),
+      });
       
       toast({
         title: "Recipes Generated!",
