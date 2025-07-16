@@ -106,6 +106,8 @@ export default function AdminPage() {
     );
   }
 
+  const selectedUserName = selectedUser?.name?.split(' ')[0];
+
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>
@@ -125,7 +127,7 @@ export default function AdminPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {selectedUser ? `${selectedUser.name.split(' ')[0]}'s Searches` : "Total Searches"}
+              {selectedUserName ? `${selectedUserName}'s Searches` : "Total Searches"}
             </CardTitle>
             <ClipboardList className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -144,7 +146,7 @@ export default function AdminPage() {
               {loadingSearches ? <Loader2 className="h-6 w-6 animate-spin" /> : avgRecipesPerSearch}
             </div>
             <p className="text-xs text-muted-foreground">
-              {selectedUser ? `For ${selectedUser.name.split(' ')[0]}`: "For all searches"}
+              {selectedUserName ? `For ${selectedUserName}`: "For all searches"}
             </p>
           </CardContent>
         </Card>
@@ -173,7 +175,7 @@ export default function AdminPage() {
                          <User className="h-5 w-5 text-secondary-foreground" />
                        </div>
                        <div className="flex-1">
-                          <p className="font-semibold">{user.name}</p>
+                          <p className="font-semibold">{user.name || 'Unknown User'}</p>
                           <p className="text-sm text-muted-foreground">{user.email}</p>
                           <p className="text-xs text-muted-foreground">
                             Joined: {user.signupDate ? user.signupDate.toLocaleDateString() : "N/A"}
@@ -194,7 +196,7 @@ export default function AdminPage() {
             <CardTitle>Recipe Search Activity</CardTitle>
              <CardDescription>
               {selectedUser 
-                ? `Showing recent searches for ${selectedUser.name}.`
+                ? `Showing recent searches for ${selectedUser.name || selectedUser.email}.`
                 : "Select a user to see their searches."}
             </CardDescription>
           </CardHeader>
@@ -212,7 +214,7 @@ export default function AdminPage() {
               ) : searches.length === 0 ? (
                  <div className="flex flex-col items-center justify-center h-full text-center p-4">
                   <Utensils className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">{selectedUser.name} hasn't made any recipe searches yet.</p>
+                  <p className="text-muted-foreground">{selectedUser.name || 'This user'} hasn't made any recipe searches yet.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -224,7 +226,7 @@ export default function AdminPage() {
                         </div>
                         <div className="flex-1 text-sm">
                             <p className="font-semibold">
-                              {selectedUser.name || "Unknown User"}
+                              {selectedUser.name || selectedUser.email}
                             </p>
                             <p className="text-muted-foreground text-xs">
                               {search.createdAt ? search.createdAt.toLocaleString() : "N/A"}
