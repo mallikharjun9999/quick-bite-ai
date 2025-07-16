@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -17,22 +18,22 @@ import {z} from 'genkit';
 const SuggestRecipesInputSchema = z.object({
   mealType: z
     .string()
-    .describe('The type of meal (Breakfast, Lunch, Dinner, Snacks, or Brunch).'),
+    .describe('The type of meal (e.g., Breakfast, Lunch, Dinner, Snacks, Brunch, or Any).'),
   dietaryPreference: z
     .string()
     .describe(
-      'Dietary preference (e.g., Vegetarian, Vegan, Non-Veg, Keto, Jain, High-protein, etc.).'
+      'Dietary preference (e.g., Vegetarian, Vegan, Non-Veg, Keto, Gluten-Free, or None).'
     ),
   allergies: z
     .string()
-    .describe('Any allergies or ingredients the user dislikes.'),
+    .describe('Any allergies or ingredients the user dislikes (e.g., "Peanuts, Shellfish" or "None").'),
   availableIngredients: z
     .string()
-    .describe('Ingredients available at home.'),
+    .describe('A comma-separated list of ingredients available to the user.'),
   cookingTimePreference: z
     .string()
-    .describe('Preferred cooking time (e.g., Under 30 minutes).'),
-  goal: z.string().describe('User goal (e.g., Healthy, balanced meal, weight loss, high protein).'),
+    .describe('Preferred cooking time (e.g., "Under 30 minutes", "Under 1 hour", or "Any").'),
+  goal: z.string().describe('User goal (e.g., "Healthy meal", "Quick dinner", "High protein", "A delicious meal").'),
 });
 
 export type SuggestRecipesInput = z.infer<typeof SuggestRecipesInputSchema>;
@@ -66,25 +67,25 @@ const prompt = ai.definePrompt({
   name: 'suggestRecipesPrompt',
   input: {schema: SuggestRecipesInputSchema},
   output: {schema: SuggestRecipesOutputSchema},
-  prompt: `You are a smart and friendly meal planner and recipe recommender.
+  prompt: `You are a smart and friendly AI chef named QuickBite. Your goal is to help users create delicious meals from the ingredients they already have.
 
-Based on the user's preferences, allergies, available ingredients, cooking time and meal type, recommend 3 recipes that match their needs.
+Based on the user's available ingredients and optional preferences, recommend up to 3 creative and tasty recipes.
 
+Available Ingredients: {{{availableIngredients}}}
 Meal type: {{{mealType}}}
 Dietary Preference: {{{dietaryPreference}}}
 Allergies/Dislikes: {{{allergies}}}
-Available Ingredients: {{{availableIngredients}}}
 Cooking Time Preference: {{{cookingTimePreference}}}
 Goal: {{{goal}}}
 
-Filter recipes accordingly and include:
-   - Recipe Title
-   - Ingredients
-   - Steps/Instructions
-   - Time to Cook
-   - Nutrition Info (Calories, Protein, Carbs, Fats)
+For each recipe, provide:
+   - A creative and appealing Recipe Title.
+   - A comma-separated list of all Ingredients required.
+   - Numbered, step-by-step Instructions.
+   - The total Time to Cook.
+   - Nutritional Info (Calories, Protein, Carbs, Fats).
 
-Give your response in clean JSON format with keys: title, ingredients, instructions, time_to_cook, nutrition.`,
+Return your response as a clean JSON object. Make the recipes sound delicious and easy to follow. If the user provides very few ingredients, be creative.`,
 });
 
 const suggestRecipesFlow = ai.defineFlow(
