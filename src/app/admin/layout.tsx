@@ -1,0 +1,57 @@
+
+"use client";
+
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ChefHat, Loader2, LogOut, Shield } from "lucide-react";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { user, loading, isAdmin, logout } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && (!user || !isAdmin)) {
+      router.push("/login");
+    }
+  }, [user, loading, isAdmin, router]);
+
+  if (loading || !user || !isAdmin) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen bg-secondary/40">
+      <header className="bg-card border-b sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <Link href="/admin" className="flex items-center gap-2">
+            <Shield className="w-7 h-7 text-primary" />
+            <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
+          </Link>
+          <div className="flex items-center gap-4">
+             <span className="text-sm text-muted-foreground hidden sm:inline">
+                {user.email} (Admin)
+            </span>
+            <Button variant="ghost" size="icon" onClick={logout}>
+              <LogOut className="h-5 w-5" />
+              <span className="sr-only">Logout</span>
+            </Button>
+          </div>
+        </div>
+      </header>
+      <main className="flex-grow container mx-auto px-4 py-8">
+        {children}
+      </main>
+    </div>
+  );
+}

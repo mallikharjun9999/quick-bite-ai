@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +23,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
-  const router = useRouter();
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -36,7 +34,7 @@ export default function LoginPage() {
         title: "Login Successful!",
         description: "Welcome back!",
       });
-      router.push("/dashboard");
+      // The redirect is now handled within the login function in useAuth
     } catch (error: unknown) {
       console.error("Failed to log in:", error);
       let description = "An unknown error occurred. Please try again.";
