@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, Soup, Sparkles } from "lucide-react";
+import { Loader2, Soup } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { type SuggestRecipesOutput, type SuggestRecipesInput } from "@/ai/flows/suggest-recipes";
 import { getRecipeSuggestions } from "@/app/actions";
@@ -20,11 +20,11 @@ export default function DashboardPage() {
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
 
   const handleGenerateRecipes = async (values: RecipeFormValues) => {
-    if (values.availableIngredients.length === 0) {
+    if (values.availableIngredients.length === 0 && values.availableIngredients.join(", ").toLowerCase() !== 'none') {
       toast({
         variant: "destructive",
         title: "No Ingredients",
-        description: "Please add some ingredients first.",
+        description: "Please add some ingredients or type 'none'.",
       });
       return;
     }

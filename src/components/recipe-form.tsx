@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ const recipeFormSchema = z.object({
   mealType: z.string().min(1, "Please select a meal type."),
   dietaryPreference: z.string().min(1, "Please select a dietary preference."),
   allergies: z.string().optional(),
-  availableIngredients: z.array(z.string()).min(1, "Please add at least one ingredient."),
+  availableIngredients: z.array(z.string()).min(1, "Please add at least one ingredient or type 'none'.").or(z.literal("none")),
   cookingTimePreference: z.string().min(1, "Please select a cooking time."),
 });
 
@@ -36,7 +36,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
     defaultValues: {
       mealType: "Lunch",
       dietaryPreference: "Vegetarian",
-      allergies: "",
+      allergies: "None",
       availableIngredients: [],
       cookingTimePreference: "30 mins",
     },
@@ -46,14 +46,22 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
 
   const handleAddIngredient = () => {
     const trimmedIngredient = newIngredient.trim();
-    if (trimmedIngredient && !ingredients.includes(trimmedIngredient)) {
-      form.setValue("availableIngredients", [...ingredients, trimmedIngredient]);
-      setNewIngredient("");
+    if (trimmedIngredient.toLowerCase() === 'none') {
+        form.setValue("availableIngredients", ['none']);
+        setNewIngredient("");
+        return;
+    }
+    if (trimmedIngredient && Array.isArray(ingredients) && !ingredients.includes(trimmedIngredient)) {
+        const currentIngredients = ingredients.filter(i => i.toLowerCase() !== 'none');
+        form.setValue("availableIngredients", [...currentIngredients, trimmedIngredient]);
+        setNewIngredient("");
     }
   };
 
   const handleRemoveIngredient = (ingredientToRemove: string) => {
-    form.setValue("availableIngredients", ingredients.filter((ing) => ing !== ingredientToRemove));
+    if (Array.isArray(ingredients)) {
+        form.setValue("availableIngredients", ingredients.filter((ing) => ing !== ingredientToRemove));
+    }
   };
 
   return (
@@ -120,7 +128,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
             <FormItem>
               <FormLabel>Allergies / Dislikes</FormLabel>
               <FormControl>
-                <Textarea placeholder="e.g., Peanuts, Shellfish" {...field} />
+                <Textarea placeholder='e.g., Peanuts, Shellfish, or "none"' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -132,10 +140,10 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
           name="availableIngredients"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Available Ingredients</FormLabel>
+              <FormLabel>Available Ingredients at Home</FormLabel>
               <div className="flex gap-2">
                 <Input
-                    placeholder="e.g., Chicken, Tomato"
+                    placeholder='e.g., Chicken, Tomato, or "none"'
                     value={newIngredient}
                     onChange={(e) => setNewIngredient(e.target.value)}
                     onKeyDown={(e) => {
@@ -148,7 +156,7 @@ export function RecipeForm({ onSubmit, isLoading }: RecipeFormProps) {
                 <Button type="button" onClick={handleAddIngredient}><Plus className="h-4 w-4" /></Button>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">
-                {ingredients.map((ing) => (
+                {Array.isArray(ingredients) && ingredients.map((ing) => (
                   <div key={ing} className="flex items-center gap-1 bg-secondary pl-3 pr-1 py-1 rounded-full text-sm">
                     {ing}
                     <button type="button" onClick={() => handleRemoveIngredient(ing)} className="bg-muted hover:bg-muted/80 rounded-full p-0.5">
