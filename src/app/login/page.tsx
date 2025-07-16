@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChefHat, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import type { FirebaseError } from "firebase/app";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -36,12 +37,17 @@ export default function LoginPage() {
         description: "Welcome back!",
       });
       router.push("/dashboard");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to log in:", error);
-      toast({
+      let description = "An unknown error occurred. Please try again.";
+      const firebaseError = error as FirebaseError;
+      if (firebaseError.code === 'auth/invalid-credential' || firebaseError.code === 'auth/wrong-password' || firebaseError.code === 'auth/user-not-found') {
+        description = "Invalid email or password. Please check your credentials and try again.";
+      }
+       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: error instanceof Error ? error.message : "An unknown error occurred. Please try again.",
+        description: description,
       });
     } finally {
       setIsLoading(false);

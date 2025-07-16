@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChefHat, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import type { FirebaseError } from "firebase/app";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -39,10 +40,17 @@ export default function SignupPage() {
       router.push("/dashboard");
     } catch (error) {
       console.error("Failed to sign up:", error);
+      let description = "An unknown error occurred. Please try again.";
+      const firebaseError = error as FirebaseError;
+      if (firebaseError.code === 'auth/email-already-in-use') {
+        description = "This email is already registered. Please login instead.";
+      } else if (firebaseError.code === 'auth/weak-password') {
+        description = "Your password is too weak. Please choose a stronger password.";
+      }
       toast({
         variant: "destructive",
         title: "Signup Failed",
-        description: error instanceof Error ? error.message : "An unknown error occurred. Please try again.",
+        description: description,
       });
     } finally {
       setIsLoading(false);
