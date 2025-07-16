@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, X, Loader2, Soup, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getRecipeSuggestions, SuggestRecipesOutput, SuggestRecipesInput } from "@/ai/flows/suggest-recipes";
+import { type SuggestRecipesOutput, type SuggestRecipesInput } from "@/ai/flows/suggest-recipes";
+import { getRecipeSuggestions } from "@/app/actions";
 import { RecipeCard, RecipeCardSkeleton } from "@/components/recipe-card";
 
 const db = getFirestore(app);
