@@ -16,6 +16,7 @@ import {
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
 import { landingPageConfig } from "@/config/landing-page";
+import { motion } from "framer-motion";
 
 export default function LandingPage() {
   const plugin = React.useRef(
@@ -23,6 +24,27 @@ export default function LandingPage() {
   )
 
   const { carouselImages } = landingPageConfig;
+  
+  const fadeIn = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+  
+  const staggerItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -47,14 +69,23 @@ export default function LandingPage() {
       <main className="flex-grow">
         <section 
           className="relative py-16 md:py-24 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2lzMTYwNjItaW1hZ2Uta3d2eWZrd3IuanBn.jpg')"
-          }}
-          data-ai-hint="food background"
         >
+           <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2lzMTYwNjItaW1hZ2Uta3d2eWZrd3IuanBn.jpg')"
+              }}
+              data-ai-hint="food background"
+            />
           <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
           <div className="container mx-auto px-4 text-center relative">
-            <div className="max-w-3xl mx-auto">
+            <motion.div 
+              className="max-w-3xl mx-auto"
+              initial="initial"
+              animate="animate"
+              variants={fadeIn}
+              transition={{ duration: 0.8 }}
+            >
                 <h2 className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight">
                 Turn Your Ingredients into Delicious Meals, Instantly.
                 </h2>
@@ -64,20 +95,26 @@ export default function LandingPage() {
                 <Button size="lg" className="mt-8" asChild>
                 <Link href="/signup">Get Started for Free</Link>
                 </Button>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         <section className="bg-card">
             <div className="container mx-auto px-4 py-16 md:py-24">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
+                <motion.div 
+                  className="grid md:grid-cols-2 gap-12 items-center"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  variants={staggerContainer}
+                >
+                    <motion.div variants={staggerItem}>
                         <h3 className="text-3xl font-bold mb-4">How It Works</h3>
                         <p className="text-muted-foreground mb-8">
                             Creating meals with QuickBite AI is as easy as 1-2-3.
                         </p>
                         <ul className="space-y-6">
-                            <li className="flex items-start gap-4">
+                            <motion.li variants={staggerItem} className="flex items-start gap-4">
                                 <div className="bg-primary/10 p-2 rounded-full mt-1">
                                     <ShoppingCart className="w-6 h-6 text-primary"/>
                                 </div>
@@ -85,8 +122,8 @@ export default function LandingPage() {
                                     <h4 className="font-semibold text-lg">List Your Ingredients</h4>
                                     <p className="text-muted-foreground">Tell us what you have in your fridge and pantry. The more you add, the better the suggestions!</p>
                                 </div>
-                            </li>
-                            <li className="flex items-start gap-4">
+                            </motion.li>
+                            <motion.li variants={staggerItem} className="flex items-start gap-4">
                                 <div className="bg-primary/10 p-2 rounded-full mt-1">
 
                                     <BrainCircuit className="w-6 h-6 text-primary"/>
@@ -95,8 +132,8 @@ export default function LandingPage() {
                                     <h4 className="font-semibold text-lg">Get AI-Powered Recipes</h4>
                                     <p className="text-muted-foreground">Our smart AI analyzes your ingredients and instantly generates creative and tasty recipes just for you.</p>
                                 </div>
-                            </li>
-                             <li className="flex items-start gap-4">
+                            </motion.li>
+                             <motion.li variants={staggerItem} className="flex items-start gap-4">
                                 <div className="bg-primary/10 p-2 rounded-full mt-1">
                                     <ChefHat className="w-6 h-6 text-primary"/>
                                 </div>
@@ -104,10 +141,10 @@ export default function LandingPage() {
                                     <h4 className="font-semibold text-lg">Cook and Enjoy</h4>
                                     <p className="text-muted-foreground">Follow the simple, step-by-step instructions to create a delicious meal and impress your family and friends.</p>
                                 </div>
-                            </li>
+                            </motion.li>
                         </ul>
-                    </div>
-                    <div>
+                    </motion.div>
+                    <motion.div variants={staggerItem}>
                         <Carousel 
                           plugins={[plugin.current]}
                           className="w-full max-w-lg mx-auto"
@@ -135,8 +172,8 @@ export default function LandingPage() {
                           <CarouselPrevious className="hidden sm:flex" />
                           <CarouselNext className="hidden sm:flex" />
                         </Carousel>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
         </section>
       </main>
