@@ -5,8 +5,30 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChefHat, ShoppingCart, BrainCircuit } from "lucide-react";
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import * as React from "react"
+import Autoplay from "embla-carousel-autoplay"
 
 export default function LandingPage() {
+  const plugin = React.useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  )
+
+  const carouselImages = [
+    { src: "https://placehold.co/600x400.png", alt: "Indian thali", hint: "indian thali" },
+    { src: "https://placehold.co/600x400.png", alt: "Pasta bowl", hint: "pasta bowl" },
+    { src: "https://placehold.co/600x400.png", alt: "Healthy salad", hint: "healthy salad" },
+    { src: "https://placehold.co/600x400.png", alt: "Brunch platter", hint: "brunch platter" },
+    { src: "https://placehold.co/600x400.png", alt: "Veggie stir-fry", hint: "veggie stir-fry" },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 py-4 flex items-center justify-between z-10">
@@ -91,14 +113,33 @@ export default function LandingPage() {
                         </ul>
                     </div>
                     <div>
-                        <Image
-                          src="https://placehold.co/600x400.png"
-                          alt="AI generated food collage"
-                          data-ai-hint="colorful meal"
-                          width={600}
-                          height={400}
-                          className="rounded-lg shadow-xl w-full"
-                        />
+                        <Carousel 
+                          plugins={[plugin.current]}
+                          className="w-full max-w-lg mx-auto"
+                          onMouseEnter={plugin.current.stop}
+                          onMouseLeave={plugin.current.reset}
+                        >
+                          <CarouselContent>
+                            {carouselImages.map((image, index) => (
+                              <CarouselItem key={index}>
+                                <Card className="overflow-hidden">
+                                  <CardContent className="flex aspect-video items-center justify-center p-0">
+                                      <Image
+                                        src={image.src}
+                                        alt={image.alt}
+                                        data-ai-hint={image.hint}
+                                        width={600}
+                                        height={400}
+                                        className="object-cover w-full h-full"
+                                      />
+                                  </CardContent>
+                                </Card>
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <CarouselPrevious className="hidden sm:flex" />
+                          <CarouselNext className="hidden sm:flex" />
+                        </Carousel>
                     </div>
                 </div>
             </div>
