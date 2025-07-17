@@ -68,20 +68,20 @@ export default function SignupPage() {
             <Link href="/">Home</Link>
         </Button>
       </div>
-      <Card className="mx-auto max-w-sm w-full z-10 bg-card/80 backdrop-blur-md border-white/20 text-white">
+      <Card className="mx-auto max-w-sm w-full z-10 bg-card/90 backdrop-blur-md border-black/20 text-foreground">
         <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-4">
               <ChefHat className="w-8 h-8 text-primary" />
-              <CardTitle className="text-2xl text-white">QuickBite AI</CardTitle>
+              <CardTitle className="text-2xl text-foreground">QuickBite AI</CardTitle>
             </div>
-            <CardDescription className="text-white/80">
+            <CardDescription className="text-muted-foreground">
                 Create an account to start generating recipes.
             </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignup} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="name" className="text-white/90">Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Input 
                 id="name" 
                 placeholder="John Doe" 
@@ -89,11 +89,11 @@ export default function SignupPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={isLoading}
-                className="bg-background/50 border-white/30 text-white placeholder:text-white/60"
+                className="bg-background/80"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email" className="text-white/90">Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -102,11 +102,11 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
-                className="bg-background/50 border-white/30 text-white placeholder:text-white/60"
+                className="bg-background/80"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password" className="text-white/90">Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input 
                 id="password" 
                 type="password" 
@@ -114,7 +114,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
-                className="bg-background/50 border-white/30 text-white"
+                className="bg-background/80"
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
@@ -122,9 +122,9 @@ export default function SignupPage() {
               Create an account
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-white/80">
+          <div className="mt-4 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="underline text-white font-semibold">
+            <Link href="/login" className="underline text-primary font-semibold">
               Login
             </Link>
           </div>

@@ -63,20 +63,20 @@ export default function LoginPage() {
             <Link href="/">Home</Link>
         </Button>
       </div>
-      <Card className="mx-auto max-w-sm w-full z-10 bg-card/80 backdrop-blur-md border-white/20 text-white">
+      <Card className="mx-auto max-w-sm w-full z-10 bg-card/90 backdrop-blur-md border-black/20 text-foreground">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             <ChefHat className="w-8 h-8 text-primary" />
-            <CardTitle className="text-2xl text-white">QuickBite AI</CardTitle>
+            <CardTitle className="text-2xl text-foreground">QuickBite AI</CardTitle>
           </div>
-          <CardDescription className="text-white/80">
+          <CardDescription className="text-muted-foreground">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email" className="text-white/90">Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -85,12 +85,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
-                className="bg-background/50 border-white/30 text-white placeholder:text-white/60"
+                className="bg-background/80"
               />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <Label htmlFor="password" className="text-white/90">Password</Label>
+                <Label htmlFor="password">Password</Label>
               </div>
               <Input 
                 id="password" 
@@ -99,7 +99,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
-                className="bg-background/50 border-white/30 text-white"
+                className="bg-background/80"
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
@@ -107,9 +107,9 @@ export default function LoginPage() {
               Login
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-white/80">
+          <div className="mt-4 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline text-white font-semibold">
+            <Link href="/signup" className="underline text-primary font-semibold">
               Sign up
             </Link>
           </div>
