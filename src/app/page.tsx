@@ -9,7 +9,7 @@ import Image from "next/image";
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="container mx-auto px-4 py-4 flex items-center justify-between z-10">
         <Link href="/" className="flex items-center gap-2">
           <ChefHat className="w-8 h-8 text-primary" />
           <h1 className="text-2xl font-bold text-foreground">QuickBite AI</h1>
@@ -25,17 +25,29 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-grow">
-        <section className="container mx-auto px-4 py-16 md:py-24 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight tracking-tight">
-              Turn Your Ingredients into Delicious Meals, Instantly.
-            </h2>
-            <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-              Don&apos;t let your ingredients go to waste. With QuickBite AI, discover amazing recipes you can make right now. Just tell us what you have, and our AI chef will do the rest.
-            </p>
-            <Button size="lg" className="mt-8" asChild>
-              <Link href="/signup">Get Started for Free</Link>
-            </Button>
+        <section className="relative py-16 md:py-24">
+           <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('https://placehold.co/1920x1080.png')",
+              zIndex: -1,
+            }}
+            data-ai-hint="food background"
+          >
+            <div className="absolute inset-0 bg-background/60 backdrop-blur-sm"></div>
+          </div>
+          <div className="container mx-auto px-4 text-center relative">
+            <div className="max-w-3xl mx-auto">
+                <h2 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight tracking-tight">
+                Turn Your Ingredients into Delicious Meals, Instantly.
+                </h2>
+                <p className="mt-6 text-lg md:text-xl text-muted-foreground">
+                Don&apos;t let your ingredients go to waste. With QuickBite AI, discover amazing recipes you can make right now. Just tell us what you have, and our AI chef will do the rest.
+                </p>
+                <Button size="lg" className="mt-8" asChild>
+                <Link href="/signup">Get Started for Free</Link>
+                </Button>
+            </div>
           </div>
         </section>
 
