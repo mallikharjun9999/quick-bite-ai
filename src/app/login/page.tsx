@@ -53,26 +53,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-      <div className="absolute top-4 right-4">
-        <Button asChild variant="ghost">
+    <div 
+      className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://img.freepik.com/free-photo/vegetables-set-left-black-slate_1220-685.jpg?w=360')" }}
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute top-4 right-4 z-10">
+        <Button asChild variant="ghost" className="text-white hover:bg-white/10 hover:text-white">
             <Link href="/">Home</Link>
         </Button>
       </div>
-      <Card className="mx-auto max-w-sm w-full">
+      <Card className="mx-auto max-w-sm w-full z-10 bg-card/80 backdrop-blur-md border-white/20 text-card-foreground">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             <ChefHat className="w-8 h-8 text-primary" />
-            <CardTitle className="text-2xl">QuickBite AI</CardTitle>
+            <CardTitle className="text-2xl text-white">QuickBite AI</CardTitle>
           </div>
-          <CardDescription>
+          <CardDescription className="text-white/80">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-white/90">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -81,11 +85,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
+                className="bg-background/50 border-white/30 text-white placeholder:text-white/60"
               />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-white/90">Password</Label>
               </div>
               <Input 
                 id="password" 
@@ -94,6 +99,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
+                className="bg-background/50 border-white/30 text-white"
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
@@ -101,9 +107,9 @@ export default function LoginPage() {
               Login
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
+          <div className="mt-4 text-center text-sm text-white/80">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline">
+            <Link href="/signup" className="underline text-white font-semibold">
               Sign up
             </Link>
           </div>
