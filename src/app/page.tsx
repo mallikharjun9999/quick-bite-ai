@@ -52,13 +52,13 @@ export default function LandingPage() {
           }}
           data-ai-hint="food background"
         >
-          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
           <div className="container mx-auto px-4 text-center relative">
             <div className="max-w-3xl mx-auto">
-                <h2 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight tracking-tight">
+                <h2 className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight">
                 Turn Your Ingredients into Delicious Meals, Instantly.
                 </h2>
-                <p className="mt-6 text-lg md:text-xl text-muted-foreground">
+                <p className="mt-6 text-lg md:text-xl text-white/90">
                 Don&apos;t let your ingredients go to waste. With QuickBite AI, discover amazing recipes you can make right now. Just tell us what you have, and our AI chef will do the rest.
                 </p>
                 <Button size="lg" className="mt-8" asChild>
