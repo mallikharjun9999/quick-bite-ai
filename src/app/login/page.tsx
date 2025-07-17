@@ -63,7 +63,7 @@ export default function LoginPage() {
             <Link href="/">Home</Link>
         </Button>
       </div>
-      <Card className="mx-auto max-w-sm w-full z-10 bg-card/80 backdrop-blur-md border-white/20 text-card-foreground">
+      <Card className="mx-auto max-w-sm w-full z-10 bg-card/80 backdrop-blur-md border-white/20 text-white">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             <ChefHat className="w-8 h-8 text-primary" />
