@@ -62,7 +62,7 @@ export default function SignupPage() {
       className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('https://img.freepik.com/free-photo/vegetables-set-left-black-slate_1220-685.jpg?w=360')" }}
     >
-       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
        <div className="absolute top-4 right-4 z-10">
         <Button asChild variant="ghost" className="text-white hover:bg-white/10 hover:text-white">
             <Link href="/">Home</Link>
