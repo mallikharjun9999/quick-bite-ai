@@ -47,15 +47,13 @@ export default function LandingPage() {
       <main className="flex-grow">
         <section className="relative py-16 md:py-24">
            <div
-            className="absolute inset-0 bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center -z-10"
             style={{
               backgroundImage: "url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2lzMTYwNjItaW1hZ2Uta3d2eWZrd3IuanBn.jpg')",
-              zIndex: -1,
             }}
             data-ai-hint="food background"
-          >
-            <div className="absolute inset-0 bg-background/60 backdrop-blur-sm"></div>
-          </div>
+          />
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm -z-10"></div>
           <div className="container mx-auto px-4 text-center relative">
             <div className="max-w-3xl mx-auto">
                 <h2 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight tracking-tight">
