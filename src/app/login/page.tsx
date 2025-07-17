@@ -55,8 +55,8 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div className="absolute top-4 right-4">
-        <Button asChild>
-            <Link href="/">Home 🏠</Link>
+        <Button asChild variant="ghost">
+            <Link href="/">Home</Link>
         </Button>
       </div>
       <Card className="mx-auto max-w-sm w-full">

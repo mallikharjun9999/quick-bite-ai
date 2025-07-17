@@ -32,8 +32,8 @@ export default function LandingPage() {
           <h1 className="text-2xl font-bold text-foreground">QuickBite AI</h1>
         </Link>
         <div className="flex items-center gap-2">
-          <Button asChild>
-              <Link href="/">Home 🏠</Link>
+          <Button asChild variant="ghost">
+              <Link href="/">Home</Link>
           </Button>
           <Button variant="ghost" asChild>
             <Link href="/login">Log In</Link>

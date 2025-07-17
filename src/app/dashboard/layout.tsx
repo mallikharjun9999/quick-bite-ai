@@ -40,7 +40,7 @@ export default function DashboardLayout({
           </Link>
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost">
-                <Link href="/">Home 🏠</Link>
+                <Link href="/">Home</Link>
             </Button>
              <span className="text-sm text-muted-foreground hidden sm:inline">
                 {user.email}
