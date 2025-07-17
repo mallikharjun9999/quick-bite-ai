@@ -39,6 +39,9 @@ export default function AdminLayout({
             <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
           </Link>
           <div className="flex items-center gap-4">
+             <Button asChild variant="ghost">
+                <Link href="/">Home 🏠</Link>
+            </Button>
              <span className="text-sm text-muted-foreground hidden sm:inline">
                 {user.email} (Admin)
             </span>

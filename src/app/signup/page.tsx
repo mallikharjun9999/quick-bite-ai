@@ -58,7 +58,12 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+       <div className="absolute top-4 right-4">
+        <Button asChild>
+            <Link href="/">Home 🏠</Link>
+        </Button>
+      </div>
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-4">

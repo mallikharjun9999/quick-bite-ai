@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChefHat, ShoppingCart, BrainCircuit } from "lucide-react";
+import { ChefHat, ShoppingCart, BrainCircuit, Home } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -32,6 +32,9 @@ export default function LandingPage() {
           <h1 className="text-2xl font-bold text-foreground">QuickBite AI</h1>
         </Link>
         <div className="flex items-center gap-2">
+          <Button asChild>
+              <Link href="/">Home 🏠</Link>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href="/login">Log In</Link>
           </Button>
