@@ -15,19 +15,14 @@ import {
 } from "@/components/ui/carousel"
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
+import { landingPageConfig } from "@/config/landing-page";
 
 export default function LandingPage() {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   )
 
-  const carouselImages = [
-    { src: "https://placehold.co/600x400.png", alt: "Indian thali", hint: "indian thali" },
-    { src: "https://placehold.co/600x400.png", alt: "Pasta bowl", hint: "pasta bowl" },
-    { src: "https://placehold.co/600x400.png", alt: "Healthy salad", hint: "healthy salad" },
-    { src: "https://placehold.co/600x400.png", alt: "Brunch platter", hint: "brunch platter" },
-    { src: "https://placehold.co/600x400.png", alt: "Veggie stir-fry", hint: "veggie stir-fry" },
-  ];
+  const { carouselImages } = landingPageConfig;
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
