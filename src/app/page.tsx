@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChefHat, Rocket, Zap } from "lucide-react";
+import { ChefHat, ShoppingCart, BrainCircuit } from "lucide-react";
 import Image from "next/image";
 
 export default function LandingPage() {
@@ -50,7 +50,7 @@ export default function LandingPage() {
                         <ul className="space-y-6">
                             <li className="flex items-start gap-4">
                                 <div className="bg-primary/10 p-2 rounded-full mt-1">
-                                    <Zap className="w-6 h-6 text-primary"/>
+                                    <ShoppingCart className="w-6 h-6 text-primary"/>
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-lg">List Your Ingredients</h4>
@@ -59,7 +59,8 @@ export default function LandingPage() {
                             </li>
                             <li className="flex items-start gap-4">
                                 <div className="bg-primary/10 p-2 rounded-full mt-1">
-                                    <Rocket className="w-6 h-6 text-primary"/>
+
+                                    <BrainCircuit className="w-6 h-6 text-primary"/>
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-lg">Get AI-Powered Recipes</h4>
@@ -81,7 +82,7 @@ export default function LandingPage() {
                         <Image
                           src="https://placehold.co/600x400.png"
                           alt="AI generated food collage"
-                          data-ai-hint="food collage"
+                          data-ai-hint="colorful meal"
                           width={600}
                           height={400}
                           className="rounded-lg shadow-xl w-full"
