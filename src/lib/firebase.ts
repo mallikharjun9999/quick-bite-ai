@@ -1,5 +1,4 @@
-
-import { initializeApp, getApps, type FirebaseOptions } from "firebase/app";
+import { initializeApp, getApps, type FirebaseApp, type FirebaseOptions } from "firebase/app";
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,11 +10,6 @@ const firebaseConfig: FirebaseOptions = {
 };
 
 // Initialize Firebase
-let app;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApps()[0];
-}
+const app: FirebaseApp = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 
-export { app };
+export { app };  // ✅ Named export

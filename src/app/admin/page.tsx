@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -46,10 +45,10 @@ export default function AdminPage() {
       setLoading(true);
       try {
         const usersSnapshot = await getDocs(collection(db, "users"));
-        const usersList = usersSnapshot.docs.map(doc => ({
+        const usersList = usersSnapshot.docs.map((doc) => ({
           id: doc.id,
-          name: doc.data().name,
-          email: doc.data().email,
+          name: doc.data().name || "Unknown User", // Added fallback
+          email: doc.data().email || "N/A",        // Added fallback
           signupDate: (doc.data().signupDate as Timestamp)?.toDate() || null,
         }));
         setUsers(usersList);
@@ -74,13 +73,15 @@ export default function AdminPage() {
       try {
         const q = query(collection(db, "recipe_searches"), where("userId", "==", selectedUser.id));
         const searchesSnapshot = await getDocs(q);
-        const searchesList = searchesSnapshot.docs.map(doc => ({
-          id: doc.id,
-          userId: doc.data().userId,
-          userInput: doc.data().userInput,
-          createdAt: (doc.data().createdAt as Timestamp)?.toDate() || null,
-          recipeCount: doc.data().generatedRecipes?.length || 0,
-        })).sort((a,b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+        const searchesList = searchesSnapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            userId: doc.data().userId,
+            userInput: doc.data().userInput,
+            createdAt: (doc.data().createdAt as Timestamp)?.toDate() || null,
+            recipeCount: doc.data().generatedRecipes?.length || 0,
+          }))
+          .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0)); // Safe sorting
         setSearches(searchesList);
       } catch (error) {
         console.error("Error fetching searches:", error);
@@ -92,11 +93,11 @@ export default function AdminPage() {
     fetchSearchesForUser();
   }, [selectedUser]);
 
-
   const totalSearches = searches.length;
-  const avgRecipesPerSearch = totalSearches > 0 
-    ? (searches.reduce((acc, s) => acc + s.recipeCount, 0) / totalSearches).toFixed(1)
-    : 0;
+  const avgRecipesPerSearch =
+    totalSearches > 0
+      ? (searches.reduce((acc, s) => acc + s.recipeCount, 0) / totalSearches).toFixed(1)
+      : 0;
 
   if (loading) {
     return (
@@ -106,7 +107,7 @@ export default function AdminPage() {
     );
   }
 
-  const selectedUserName = selectedUser?.name?.split(' ')[0];
+  const selectedUserName = selectedUser?.name?.split(" ")[0];
 
   return (
     <div className="space-y-8">
@@ -132,11 +133,13 @@ export default function AdminPage() {
             <ClipboardList className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{loadingSearches ? <Loader2 className="h-6 w-6 animate-spin" /> : totalSearches}</div>
+            <div className="text-2xl font-bold">
+              {loadingSearches ? <Loader2 className="h-6 w-6 animate-spin" /> : totalSearches}
+            </div>
             <p className="text-xs text-muted-foreground">Recipe searches made</p>
           </CardContent>
         </Card>
-         <Card>
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg. Recipes/Search</CardTitle>
             <Utensils className="h-4 w-4 text-muted-foreground" />
@@ -146,7 +149,7 @@ export default function AdminPage() {
               {loadingSearches ? <Loader2 className="h-6 w-6 animate-spin" /> : avgRecipesPerSearch}
             </div>
             <p className="text-xs text-muted-foreground">
-              {selectedUserName ? `For ${selectedUserName}`: "For all searches"}
+              {selectedUserName ? `For ${selectedUserName}` : "For all searches"}
             </p>
           </CardContent>
         </Card>
@@ -164,23 +167,23 @@ export default function AdminPage() {
               <div className="space-y-4">
                 {users.map((user, index) => (
                   <div key={user.id}>
-                    <button 
+                    <button
                       className={cn(
                         "flex items-start gap-4 w-full text-left p-3 rounded-lg transition-colors",
                         selectedUser?.id === user.id ? "bg-accent" : "hover:bg-accent/50"
                       )}
                       onClick={() => setSelectedUser(user)}
                     >
-                       <div className="bg-secondary p-3 rounded-full">
-                         <User className="h-5 w-5 text-secondary-foreground" />
-                       </div>
-                       <div className="flex-1">
-                          <p className="font-semibold">{user.name || 'Unknown User'}</p>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Joined: {user.signupDate ? user.signupDate.toLocaleDateString() : "N/A"}
-                          </p>
-                       </div>
+                      <div className="bg-secondary p-3 rounded-full">
+                        <User className="h-5 w-5 text-secondary-foreground" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold">{user.name || "Unknown User"}</p>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Joined: {user.signupDate ? user.signupDate.toLocaleDateString() : "N/A"}
+                        </p>
+                      </div>
                     </button>
                     {index < users.length - 1 && <Separator className="my-1" />}
                   </div>
@@ -194,8 +197,8 @@ export default function AdminPage() {
         <Card>
           <CardHeader>
             <CardTitle>Recipe Search Activity</CardTitle>
-             <CardDescription>
-              {selectedUser 
+            <CardDescription>
+              {selectedUser
                 ? `Showing recent searches for ${selectedUser.name || selectedUser.email}.`
                 : "Select a user to see their searches."}
             </CardDescription>
@@ -209,12 +212,16 @@ export default function AdminPage() {
               ) : !selectedUser ? (
                 <div className="flex flex-col items-center justify-center h-full text-center p-4">
                   <Search className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">Please select a user from the list to view their search history.</p>
+                  <p className="text-muted-foreground">
+                    Please select a user from the list to view their search history.
+                  </p>
                 </div>
               ) : searches.length === 0 ? (
-                 <div className="flex flex-col items-center justify-center h-full text-center p-4">
+                <div className="flex flex-col items-center justify-center h-full text-center p-4">
                   <Utensils className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">{selectedUser.name || 'This user'} hasn't made any recipe searches yet.</p>
+                  <p className="text-muted-foreground">
+                    {selectedUser.name || "This user"} hasn't made any recipe searches yet.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -222,20 +229,25 @@ export default function AdminPage() {
                     <div key={search.id}>
                       <div className="flex items-start gap-4">
                         <div className="bg-secondary p-3 rounded-full">
-                            <Utensils className="h-5 w-5 text-secondary-foreground" />
+                          <Utensils className="h-5 w-5 text-secondary-foreground" />
                         </div>
                         <div className="flex-1 text-sm">
-                            <p className="font-semibold">
-                              {selectedUser.name || selectedUser.email}
+                          <p className="font-semibold">{selectedUser.name || selectedUser.email}</p>
+                          <p className="text-muted-foreground text-xs">
+                            {search.createdAt ? search.createdAt.toLocaleString() : "N/A"}
+                          </p>
+                          <div className="mt-2 p-3 bg-muted/50 rounded-md text-xs space-y-1">
+                            <p>
+                              <b>Ingredients:</b> {search.userInput.availableIngredients}
                             </p>
-                            <p className="text-muted-foreground text-xs">
-                              {search.createdAt ? search.createdAt.toLocaleString() : "N/A"}
+                            <p>
+                              <b>Meal:</b> {search.userInput.mealType} | <b>Diet:</b>{" "}
+                              {search.userInput.dietaryPreference}
                             </p>
-                            <div className="mt-2 p-3 bg-muted/50 rounded-md text-xs space-y-1">
-                              <p><b>Ingredients:</b> {search.userInput.availableIngredients}</p>
-                              <p><b>Meal:</b> {search.userInput.mealType} | <b>Diet:</b> {search.userInput.dietaryPreference}</p>
-                              <p><b>Generated:</b> {search.recipeCount} recipes</p>
-                            </div>
+                            <p>
+                              <b>Generated:</b> {search.recipeCount} recipes
+                            </p>
+                          </div>
                         </div>
                       </div>
                       {index < searches.length - 1 && <Separator className="my-4" />}
@@ -249,5 +261,4 @@ export default function AdminPage() {
       </div>
     </div>
   );
-
-    
+}
